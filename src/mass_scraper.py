@@ -21,6 +21,7 @@ from src.cookie_manager import load_cookies, save_cookies, cookies_to_string
 from src.token_rotation import create_browser_session, verify_auth, force_refresh, auth_and_refresh
 from src.submit_attempt import RateLimited, AuthExpired
 from src.full_scraper import scrape_test_full
+from src.d1_sync import sync as sync_d1
 
 
 def load_progress() -> dict:
@@ -248,6 +249,13 @@ async def run(time_limit_minutes: int = 0, max_tests: int = 0):
             }
             save_progress(progress)
 
+            # Sync to D1 every 25 tests
+            if tests_done % 25 == 0:
+                try:
+                    sync_d1(progress)
+                except Exception as e:
+                    print(f"  ⚠ D1 sync error: {e}", flush=True)
+
             # Force-refresh every 8 tests
             if tests_since_refresh >= REFRESH_EVERY_N_TESTS:
                 print(f"\n  → Force-refresh (every {REFRESH_EVERY_N_TESTS} tests)...", flush=True)
@@ -284,6 +292,12 @@ async def run(time_limit_minutes: int = 0, max_tests: int = 0):
         # Final git commit
         save_cookies(cookies)
         git_commit()
+
+        # Final D1 sync
+        try:
+            sync_d1(progress)
+        except Exception as e:
+            print(f"  ⚠ Final D1 sync error: {e}", flush=True)
 
     finally:
         if browser:
