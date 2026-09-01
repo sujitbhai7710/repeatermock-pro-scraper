@@ -37,8 +37,8 @@ jobs:
             data/tests/
             data/progress.json
             data/submit_format.json
-          key: scrape-pro-v1
-          restore-keys: scrape-pro-v1
+          key: scrape-pro-v2
+          restore-keys: scrape-pro-v2
       - name: Run scraper
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -64,8 +64,25 @@ jobs:
           echo "## PRO Scrape Summary" >> $GITHUB_STEP_SUMMARY
           python3 -c "
           import json
-          p=json.load(open('data/progress.json'))
-          s=len(p.get('scraped_test_ids',[]))
-          t=len(p.get('test_inventory',[]))
-          print(f'- Scraped: {s}/{t} ({s/t*100:.1f}%)' if t else '- No inventory yet')
-          " >> $GITHUB_STEP_SUMMARY || true
+          try:
+              p=json.load(open('data/progress.json'))
+              s=len(p.get('scraped_test_ids',[]))
+              t=len(p.get('test_inventory',[]))
+              par=len(p.get('partial_test_ids',[]))
+              f=len(p.get('failed_test_ids',[]))
+              if t: print(f'- Scraped: {s}/{t} ({s/t*100:.1f}%)')
+              else: print(f'- Scraped: {s} (inventory not built yet)')
+              print(f'- Partial: {par}')
+              print(f'- Failed: {f}')
+          except Exception as e:
+              print(f'- No progress data yet: {e}')
+          " >> $GITHUB_STEP_SUMMARY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scrape-pro-${{ github.run_id }}
+          path: |
+            data/tests/
+            data/progress.json
+            cookies/
+          retention-days: 30
