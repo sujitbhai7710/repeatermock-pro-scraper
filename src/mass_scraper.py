@@ -249,10 +249,10 @@ async def run(time_limit_minutes: int = 0, max_tests: int = 0):
             }
             save_progress(progress)
 
-            # Sync to D1 every 25 tests
-            if tests_done % 25 == 0:
+            # Sync to D1 every 50 tests (only changed tests to avoid write limit)
+            if tests_done % 50 == 0:
                 try:
-                    sync_d1(progress)
+                    sync_d1(progress, only_changed={test["id"]})
                 except Exception as e:
                     print(f"  ⚠ D1 sync error: {e}", flush=True)
 
@@ -293,9 +293,13 @@ async def run(time_limit_minutes: int = 0, max_tests: int = 0):
         save_cookies(cookies)
         git_commit()
 
-        # Final D1 sync
+        # Final D1 sync (only recently changed tests)
         try:
-            sync_d1(progress)
+            recently_changed = set()
+            # Get last 100 test IDs from inventory
+            for t in inventory[-100:]:
+                recently_changed.add(t["id"])
+            sync_d1(progress, only_changed=recently_changed if recently_changed else None)
         except Exception as e:
             print(f"  ⚠ Final D1 sync error: {e}", flush=True)
 
