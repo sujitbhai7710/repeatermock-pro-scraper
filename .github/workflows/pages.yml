@@ -1,0 +1,75 @@
+name: Deploy Dashboard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'data/progress.json'
+      - '.github/workflows/pages.yml'
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_run:
+    workflows: ["Scrape PRO Tests"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one in-flight deploy at a time, but don't cancel a running one
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Skip when triggered by a failed scrape run (only deploy on success or other triggers)
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy progress.json into docs/
+        run: |
+          mkdir -p docs
+          if [ -f data/progress.json ]; then
+            cp data/progress.json docs/progress.json
+            echo "Copied data/progress.json ($(wc -c < data/progress.json) bytes) to docs/progress.json"
+          else
+            echo "data/progress.json not found — writing empty stub"
+            cat > docs/progress.json <<'JSON'
+          {
+            "scraped_test_ids": [],
+            "partial_test_ids": [],
+            "failed_test_ids": [],
+            "tests_status": {},
+            "series_progress": {},
+            "test_inventory": [],
+            "run_history": [],
+            "last_run_start": null,
+            "last_run_end": null
+          }
+          JSON
+          fi
+
+      - name: List docs/
+        run: ls -la docs/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

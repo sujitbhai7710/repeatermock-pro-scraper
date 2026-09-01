@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RepeaterMock PRO Scraper — Dashboard</title>
+<style>
+  :root {
+    --bg:            #0d1117;
+    --bg-elevated:   #161b22;
+    --bg-hover:      #1c2128;
+    --border:        #30363d;
+    --border-muted:  #21262d;
+    --text:          #e6edf3;
+    --text-muted:    #8b949e;
+    --text-dim:      #6e7681;
+    --accent:        #58a6ff;
+    --green:         #3fb950;
+    --yellow:        #d29922;
+    --red:           #f85149;
+    --gray:          #6e7681;
+    --purple:        #bc8cff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue",
+                 Arial, sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .container { max-width: 1280px; margin: 0 auto; padding: 24px 20px 60px; }
+
+  /* Header */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand h1 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand h1 .logo {
+    display: inline-block;
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    border-radius: 6px;
+    position: relative;
+  }
+  .brand h1 .logo::after {
+    content: "";
+    position: absolute; inset: 6px;
+    border: 2px solid var(--bg);
+    border-radius: 3px;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+  }
+  .brand .subtitle {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .brand .subtitle a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .brand .subtitle a:hover { text-decoration: underline; }
+
+  .status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: right;
+  }
+  .status-row {
+    display: flex; align-items: center; gap: 8px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gray);
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  .dot.live   { background: var(--green); animation: pulse 2s infinite; }
+  .dot.fetch  { background: var(--accent); animation: pulse 1s infinite; }
+  .dot.error  { background: var(--red); }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.4); }
+    70%  { box-shadow: 0 0 0 8px rgba(63, 185, 80, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0); }
+  }
+  .countdown {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2px 10px;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Error banner */
+  .banner {
+    background: rgba(248, 81, 73, 0.1);
+    border: 1px solid var(--red);
+    color: #ffb8b3;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 13px;
+    display: none;
+  }
+  .banner.visible { display: block; }
+
+  /* Stats grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.15s, transform 0.15s;
+  }
+  .stat-card:hover { border-color: var(--text-muted); }
+  .stat-card .label {
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .stat-card .value {
+    font-size: 28px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.5px;
+  }
+  .stat-card .sub {
+    color: var(--text-dim);
+    font-size: 11px;
+    margin-top: 4px;
+  }
+  .stat-card .accent-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+  .stat-card.total    .value { color: var(--text); }
+  .stat-card.total    .accent-bar { background: var(--accent); }
+  .stat-card.scraped  .value { color: var(--green); }
+  .stat-card.scraped  .accent-bar { background: var(--green); }
+  .stat-card.partial  .value { color: var(--yellow); }
+  .stat-card.partial  .accent-bar { background: var(--yellow); }
+  .stat-card.failed   .value { color: var(--red); }
+  .stat-card.failed   .accent-bar { background: var(--red); }
+  .stat-card.pending   .value { color: var(--text-muted); }
+  .stat-card.pending   .accent-bar { background: var(--gray); }
+  .stat-card.progress .value { color: var(--accent); }
+  .stat-card.progress .accent-bar { background: linear-gradient(180deg, var(--accent), var(--purple)); }
+
+  /* Overall progress bar */
+  .overall-section {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-bottom: 28px;
+  }
+  .overall-header {
+    display: flex; justify-content: space-between; align-items: baseline;
+    margin-bottom: 12px;
+  }
+  .overall-header h2 {
+    font-size: 13px; font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .overall-header .pct {
+    font-size: 22px; font-weight: 700;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .progress-bar {
+    height: 14px;
+    background: var(--bg);
+    border-radius: 7px;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid var(--border-muted);
+  }
+  .progress-bar > span {
+    display: block;
+    height: 100%;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .seg-scraped { background: var(--green); }
+  .seg-partial { background: var(--yellow); }
+  .seg-failed  { background: var(--red); }
+  .seg-pending { background: var(--gray); opacity: 0.5; }
+  .legend {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    margin-top: 10px;
+    font-size: 12px; color: var(--text-muted);
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch {
+    width: 10px; height: 10px; border-radius: 2px;
+  }
+
+  /* Section header */
+  .section-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px;
+  }
+  .section-head h2 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.2px;
+  }
+  .section-head .meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  /* Series list */
+  #series-list {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 32px;
+  }
+  .series-row {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .series-row:hover {
+    border-color: var(--text-muted);
+    background: var(--bg-hover);
+  }
+  .series-row-head {
+    display: grid;
+    grid-template-columns: minmax(140px, 220px) 1fr auto;
+    gap: 14px;
+    align-items: center;
+  }
+  .series-name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .series-name a {
+    color: var(--text);
+    text-decoration: none;
+  }
+  .series-name a:hover { color: var(--accent); }
+  .series-name .slug-tag {
+    display: inline-block;
+    background: var(--bg);
+    color: var(--text-muted);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    margin-left: 6px;
+    border: 1px solid var(--border);
+  }
+  .series-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .series-bar {
+    flex: 1;
+    height: 8px;
+    background: var(--bg);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    border: 1px solid var(--border-muted);
+    min-width: 100px;
+  }
+  .series-bar > span {
+    display: block; height: 100%;
+    transition: width 0.5s ease;
+  }
+  .series-pct {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    min-width: 42px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .series-stats {
+    display: flex; gap: 8px;
+    font-size: 11px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .series-stats .pill {
+    padding: 2px 7px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .series-stats .pill.s { color: var(--green); border-color: rgba(63,185,80,0.3); background: rgba(63,185,80,0.08); }
+  .series-stats .pill.p { color: var(--yellow); border-color: rgba(210,153,34,0.3); background: rgba(210,153,34,0.08); }
+  .series-stats .pill.f { color: var(--red); border-color: rgba(248,81,73,0.3); background: rgba(248,81,73,0.08); }
+  .series-stats .pill.n { color: var(--text-muted); }
+
+  /* Runs table */
+  .runs-wrap {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
+  tbody td {
+    padding: 10px 16px;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border-muted);
+    font-variant-numeric: tabular-nums;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--bg-hover); }
+  td.num { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; text-align: right; }
+  td.time { color: var(--text-muted); font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12px; }
+  td.tests { color: var(--green); font-weight: 600; }
+
+  /* Empty / placeholder */
+  .empty {
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    background: var(--bg-elevated);
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+  }
+  .empty .icon {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 8px;
+    opacity: 0.5;
+  }
+
+  /* Skeleton loading */
+  .skeleton {
+    background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-hover) 50%, var(--bg-elevated) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 6px;
+    color: transparent !important;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 11px;
+    padding: 24px 0;
+    border-top: 1px solid var(--border-muted);
+    margin-top: 20px;
+  }
+  footer a { color: var(--text-muted); text-decoration: none; }
+  footer a:hover { color: var(--accent); }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .container { padding: 16px 12px 40px; }
+    .brand h1 { font-size: 18px; }
+    .stat-card .value { font-size: 22px; }
+    .series-row-head {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .series-stats { flex-wrap: wrap; }
+    thead th, tbody td { padding: 8px 10px; font-size: 12px; }
+    table { display: block; overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="brand">
+      <h1><span class="logo"></span> PRO Scraper Dashboard</h1>
+      <p class="subtitle">
+        <a href="https://github.com/repeatermock-pro-scraper" target="_blank" rel="noopener">repeatermock-pro-scraper</a>
+        <span id="repo-meta"></span>
+      </p>
+    </div>
+    <div class="status">
+      <div class="status-row">
+        <span class="dot live" id="status-dot"></span>
+        <span id="status-text">Live</span>
+      </div>
+      <div class="status-row">
+        <span id="last-updated">never</span>
+      </div>
+      <div class="status-row">
+        <span class="countdown" id="countdown">60s</span>
+        <span>until refresh</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="banner" id="error-banner"></div>
+
+  <section class="stats-grid" id="stats-grid">
+    <!-- Stat cards injected -->
+  </section>
+
+  <section class="overall-section">
+    <div class="overall-header">
+      <h2>Overall Progress</h2>
+      <span class="pct" id="overall-pct">—</span>
+    </div>
+    <div class="progress-bar" id="overall-bar"></div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--green)"></span> Scraped</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--yellow)"></span> Partial</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--red)"></span> Failed</div>
+      <div class="legend-item"><span class="legend-swatch" style="background:var(--gray);opacity:0.5"></span> Pending</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Per-Series Breakdown</h2>
+      <span class="meta" id="series-meta"></span>
+    </div>
+    <div id="series-list"></div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <h2>Recent Runs</h2>
+      <span class="meta" id="runs-meta"></span>
+    </div>
+    <div class="runs-wrap" id="runs-wrap">
+      <!-- table injected -->
+    </div>
+  </section>
+
+  <footer>
+    Auto-refreshing every 60s ·
+    <a href="https://github.com/repeatermock-pro-scraper" target="_blank" rel="noopener">View repository</a>
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+const REFRESH_INTERVAL_SEC = 60;
+let lastData = null;
+let lastFetchOk = false;
+let lastFetchTime = null;
+let countdown = REFRESH_INTERVAL_SEC;
+
+const $ = (id) => document.getElementById(id);
+
+function setStatus(state, text) {
+  const dot = $("status-dot");
+  const t   = $("status-text");
+  dot.className = "dot " + state;
+  t.textContent = text;
+}
+
+function fmtNum(n) { return n.toLocaleString(); }
+function pct(n, d) { return d > 0 ? (n / d * 100) : 0; }
+function pad(n) { return n < 10 ? "0" + n : "" + n; }
+
+function fmtTimeAgo(ts) {
+  if (!ts) return "never";
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 5)   return "just now";
+  if (diff < 60)  return diff + "s ago";
+  if (diff < 3600) return Math.floor(diff / 60) + "m ago";
+  return Math.floor(diff / 3600) + "h ago";
+}
+
+function fmtDate(ts) {
+  if (!ts) return "—";
+  const d = new Date(ts * 1000);
+  return d.getFullYear() + "-" + pad(d.getMonth()+1) + "-" + pad(d.getDate()) +
+         " " + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds());
+}
+
+function fmtDuration(minutes) {
+  if (minutes == null) return "—";
+  if (minutes < 1) return Math.round(minutes * 60) + "s";
+  if (minutes < 60) return minutes.toFixed(1) + "m";
+  const h = Math.floor(minutes / 60);
+  const m = Math.round(minutes % 60);
+  return h + "h " + m + "m";
+}
+
+function showError(msg) {
+  const b = $("error-banner");
+  b.textContent = "⚠ " + msg;
+  b.classList.add("visible");
+}
+function clearError() {
+  $("error-banner").classList.remove("visible");
+}
+
+function statCard(label, value, sub, klass) {
+  const el = document.createElement("div");
+  el.className = "stat-card " + klass;
+  el.innerHTML =
+    '<div class="accent-bar"></div>' +
+    '<div class="label">' + label + '</div>' +
+    '<div class="value">' + value + '</div>' +
+    (sub ? '<div class="sub">' + sub + '</div>' : '');
+  return el;
+}
+
+function renderStats(data) {
+  const grid = $("stats-grid");
+  grid.innerHTML = "";
+
+  const scraped = (data.scraped_test_ids || []).length;
+  const partial = (data.partial_test_ids || []).length;
+  const failed  = (data.failed_test_ids  || []).length;
+  const total   = (data.test_inventory   || []).length;
+  const done    = scraped + partial + failed;
+  const pending = Math.max(0, total - done);
+  const progressPct = pct(scraped, total);
+
+  grid.appendChild(statCard("Total Tests", fmtNum(total), total ? "in inventory" : "inventory empty", "total"));
+  grid.appendChild(statCard("Scraped", fmtNum(scraped), pct(scraped, total).toFixed(1) + "% of total", "scraped"));
+  grid.appendChild(statCard("Partial", fmtNum(partial), "needs re-scrape", "partial"));
+  grid.appendChild(statCard("Failed",  fmtNum(failed),  "errored out", "failed"));
+  grid.appendChild(statCard("Pending", fmtNum(pending), "not yet attempted", "pending"));
+  grid.appendChild(statCard("Progress", progressPct.toFixed(1) + "%", "scraped / total", "progress"));
+
+  // Overall progress bar
+  $("overall-pct").textContent = progressPct.toFixed(1) + "%";
+  const bar = $("overall-bar");
+  bar.innerHTML = "";
+  if (total > 0) {
+    const seg = (n, cls) => {
+      const s = document.createElement("span");
+      s.className = cls;
+      s.style.width = (n / total * 100) + "%";
+      bar.appendChild(s);
+    };
+    seg(scraped, "seg-scraped");
+    seg(partial, "seg-partial");
+    seg(failed,  "seg-failed");
+    seg(pending, "seg-pending");
+  }
+}
+
+function renderSeries(data) {
+  const wrap = $("series-list");
+  wrap.innerHTML = "";
+  const inventory = data.test_inventory || [];
+  const scrapedSet = new Set(data.scraped_test_ids || []);
+  const partialSet = new Set(data.partial_test_ids || []);
+  const failedSet  = new Set(data.failed_test_ids  || []);
+
+  if (inventory.length === 0) {
+    wrap.innerHTML =
+      '<div class="empty"><span class="icon">○</span>' +
+      'Test inventory is empty.<br>Run the scraper to build it.</div>';
+    $("series-meta").textContent = "";
+    return;
+  }
+
+  // Group by _slug
+  const groups = {};
+  for (const t of inventory) {
+    const slug = t._slug || "unknown";
+    if (!groups[slug]) {
+      groups[slug] = { slug: slug, tests: [], scraped: 0, partial: 0, failed: 0, pending: 0 };
+    }
+    const g = groups[slug];
+    g.tests.push(t);
+    if (scrapedSet.has(t.id)) g.scraped++;
+    else if (partialSet.has(t.id)) g.partial++;
+    else if (failedSet.has(t.id))  g.failed++;
+    else g.pending++;
+  }
+
+  // Sort by total tests desc, then slug asc
+  const seriesArr = Object.values(groups).sort((a, b) =>
+    b.tests.length - a.tests.length || a.slug.localeCompare(b.slug)
+  );
+
+  $("series-meta").textContent = seriesArr.length + " series · " + inventory.length + " tests";
+
+  for (const s of seriesArr) {
+    const total = s.tests.length;
+    const done = s.scraped + s.partial + s.failed;
+    const sp = pct(s.scraped, total);
+
+    const row = document.createElement("div");
+    row.className = "series-row";
+
+    const url = "https://repeatermock.com/tb-pro/test-series/" + encodeURIComponent(s.slug);
+
+    row.innerHTML =
+      '<div class="series-row-head">' +
+        '<div class="series-name">' +
+          '<a href="' + url + '" target="_blank" rel="noopener">' + escapeHtml(s.slug) + '</a>' +
+          '<span class="slug-tag">' + total + ' test' + (total === 1 ? "" : "s") + '</span>' +
+        '</div>' +
+        '<div class="series-bar-wrap">' +
+          '<div class="series-bar">' +
+            (s.scraped ? '<span class="seg-scraped" style="width:' + (s.scraped/total*100) + '%"></span>' : '') +
+            (s.partial ? '<span class="seg-partial" style="width:' + (s.partial/total*100) + '%"></span>' : '') +
+            (s.failed  ? '<span class="seg-failed"  style="width:' + (s.failed /total*100) + '%"></span>' : '') +
+            (s.pending ? '<span class="seg-pending" style="width:' + (s.pending/total*100) + '%"></span>' : '') +
+          '</div>' +
+          '<span class="series-pct">' + sp.toFixed(0) + '%</span>' +
+        '</div>' +
+        '<div class="series-stats">' +
+          '<span class="pill s">S ' + s.scraped + '</span>' +
+          '<span class="pill p">P ' + s.partial + '</span>' +
+          '<span class="pill f">F ' + s.failed  + '</span>' +
+          '<span class="pill n">N ' + s.pending + '</span>' +
+        '</div>' +
+      '</div>';
+    wrap.appendChild(row);
+  }
+}
+
+function renderRuns(data) {
+  const wrap = $("runs-wrap");
+  const history = data.run_history || [];
+
+  if (history.length === 0) {
+    wrap.innerHTML =
+      '<div class="empty"><span class="icon">◔</span>' +
+      'No runs recorded yet.</div>';
+    $("runs-meta").textContent = "";
+    return;
+  }
+
+  // Newest first
+  const runs = history.slice().reverse();
+  $("runs-meta").textContent = runs.length + " run" + (runs.length === 1 ? "" : "s");
+
+  let html =
+    '<table>' +
+    '<thead><tr>' +
+      '<th>#</th>' +
+      '<th>Start</th>' +
+      '<th>End</th>' +
+      '<th class="num">Duration</th>' +
+      '<th class="num">Tests Scraped</th>' +
+    '</tr></thead><tbody>';
+  runs.forEach((r, i) => {
+    html +=
+      '<tr>' +
+        '<td class="time">' + (i + 1) + '</td>' +
+        '<td class="time">' + fmtDate(r.start) + '</td>' +
+        '<td class="time">' + fmtDate(r.end) + '</td>' +
+        '<td class="num">' + fmtDuration(r.time_minutes) + '</td>' +
+        '<td class="num tests">' + (r.tests_scraped != null ? fmtNum(r.tests_scraped) : "—") + '</td>' +
+      '</tr>';
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+
+function escapeHtml(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderSkeletons() {
+  // Initial skeleton state
+  const grid = $("stats-grid");
+  grid.innerHTML = "";
+  for (let i = 0; i < 6; i++) {
+    const c = document.createElement("div");
+    c.className = "stat-card total";
+    c.innerHTML =
+      '<div class="accent-bar"></div>' +
+      '<div class="label skeleton">loading</div>' +
+      '<div class="value skeleton">000</div>';
+    grid.appendChild(c);
+  }
+  $("overall-bar").innerHTML = "";
+  $("series-list").innerHTML = '<div class="empty">Loading…</div>';
+  $("runs-wrap").innerHTML   = '<div class="empty">Loading…</div>';
+}
+
+async function fetchData() {
+  setStatus("fetch", "Fetching…");
+  // cache-bust to ensure fresh
+  const url = "./progress.json?t=" + Date.now();
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) {
+      throw new Error("HTTP " + res.status + " " + res.statusText);
+    }
+    const data = await res.json();
+    lastData = data;
+    lastFetchOk = true;
+    lastFetchTime = Date.now();
+    clearError();
+    renderStats(data);
+    renderSeries(data);
+    renderRuns(data);
+    setStatus("live", "Live");
+    updateLastUpdated();
+  } catch (err) {
+    lastFetchOk = false;
+    setStatus("error", "Error");
+    showError("Failed to load progress.json: " + err.message +
+      ". Will retry in " + countdown + "s.");
+    // If we already have data, keep showing it
+    if (!lastData) {
+      renderSkeletons();
+    }
+  }
+}
+
+function updateLastUpdated() {
+  $("last-updated").textContent = "updated " + fmtTimeAgo(lastFetchTime);
+}
+
+function updateCountdown() {
+  countdown--;
+  if (countdown <= 0) {
+    countdown = REFRESH_INTERVAL_SEC;
+    fetchData();
+  }
+  $("countdown").textContent = countdown + "s";
+  updateLastUpdated();
+}
+
+// Boot
+renderSkeletons();
+fetchData();
+setInterval(updateCountdown, 1000);
+// Also re-render "x ago" label every 5s even without a fetch
+setInterval(updateLastUpdated, 5000);
+</script>
+</body>
+</html>
