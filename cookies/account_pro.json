@@ -1,0 +1,58 @@
+[
+{
+    "domain": ".repeatermock.com",
+    "expirationDate": 1788286278.197611,
+    "hostOnly": false,
+    "httpOnly": true,
+    "name": "accessToken",
+    "path": "/",
+    "sameSite": "lax",
+    "secure": true,
+    "session": false,
+    "storeId": "0",
+    "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2YTk1YjEyYjljNDk1OGE2NzEyNzkxNmIiLCJlbWFpbCI6InNwZWxsaW5nYmVlYW5zd2Vyc0BnbWFpbC5jb20iLCJpYXQiOjE3ODgyODUzNzgsImV4cCI6MTc4ODI4NjI3OH0.KEOF-Ceq2O1EL37ufB7mjtP-WR3o0kEaaFtBquQEVbY",
+    "id": 1
+},
+{
+    "domain": ".repeatermock.com",
+    "expirationDate": 1790877378.197697,
+    "hostOnly": false,
+    "httpOnly": true,
+    "name": "refreshToken",
+    "path": "/",
+    "sameSite": "lax",
+    "secure": true,
+    "session": false,
+    "storeId": "0",
+    "value": "e0b604b0b73be2533bc6eaab893dfa30beb9d8ba317091c0f9b854f0692ea34b6044dd3384a5914b00bd50f13e0e77e1c578c0e5f663666964c062dc18c40403",
+    "id": 2
+},
+{
+    "domain": ".repeatermock.com",
+    "expirationDate": 1790877378.197725,
+    "hostOnly": false,
+    "httpOnly": true,
+    "name": "totpVerified",
+    "path": "/",
+    "sameSite": "lax",
+    "secure": true,
+    "session": false,
+    "storeId": "0",
+    "value": "1",
+    "id": 3
+},
+{
+    "domain": "repeatermock.com",
+    "expirationOnly": false,
+    "hostOnly": true,
+    "httpOnly": true,
+    "name": "rm_fe",
+    "path": "/",
+    "sameSite": "lax",
+    "secure": true,
+    "session": true,
+    "storeId": "0",
+    "value": "2f6631856d3362ec",
+    "id": 4
+}
+]
