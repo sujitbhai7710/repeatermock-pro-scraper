@@ -1,12 +1,8 @@
 name: Deploy Dashboard
-
 on:
   push:
     branches: [main]
-    paths:
-      - 'docs/**'
-      - 'data/progress.json'
-      - '.github/workflows/pages.yml'
+    paths: ['docs/**', 'data/progress.json', '.github/workflows/pages.yml']
   schedule:
     - cron: '*/15 * * * *'
   workflow_run:
@@ -19,7 +15,6 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one in-flight deploy at a time, but don't cancel a running one
 concurrency:
   group: pages-deploy
   cancel-in-progress: false
@@ -27,49 +22,32 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # Skip when triggered by a failed scrape run (only deploy on success or other triggers)
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Copy progress.json into docs/
+      - uses: actions/checkout@v4
+      - name: Restore scraper cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            data/progress.json
+            data/tests/
+          key: scrape-pro-v2
+          restore-keys: scrape-pro-v2
+      - name: Copy progress.json to docs
         run: |
-          mkdir -p docs
           if [ -f data/progress.json ]; then
             cp data/progress.json docs/progress.json
-            echo "Copied data/progress.json ($(wc -c < data/progress.json) bytes) to docs/progress.json"
+            echo "✓ Copied progress.json ($(python3 -c "import json;d=json.load(open('data/progress.json'));print(len(d.get('scraped_test_ids',[])))") scraped)"
           else
-            echo "data/progress.json not found — writing empty stub"
-            cat > docs/progress.json <<'JSON'
-          {
-            "scraped_test_ids": [],
-            "partial_test_ids": [],
-            "failed_test_ids": [],
-            "tests_status": {},
-            "series_progress": {},
-            "test_inventory": [],
-            "run_history": [],
-            "last_run_start": null,
-            "last_run_end": null
-          }
-          JSON
+            echo '{"scraped_test_ids":[],"partial_test_ids":[],"failed_test_ids":[],"test_inventory":[],"run_history":[]}' > docs/progress.json
+            echo "⚠ No progress.json found — created empty stub"
           fi
-
-      - name: List docs/
-        run: ls -la docs/
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: docs
-
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
