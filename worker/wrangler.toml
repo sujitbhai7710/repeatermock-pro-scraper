@@ -1,0 +1,12 @@
+name = "repeatermock-pro-dashboard"
+main = "src/index.js"
+compatibility_date = "2024-09-01"
+account_id = ""
+
+[[d1_databases]]
+binding = "DB"
+database_name = "repeatermock-pro-scraper"
+database_id = ""
+
+[triggers]
+crons = ["*/15 * * * *"]

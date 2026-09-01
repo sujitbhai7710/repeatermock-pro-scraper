@@ -1,0 +1,71 @@
+name: Scrape PRO Tests
+on:
+  workflow_dispatch:
+    inputs:
+      time_limit_minutes: { required: false, default: '350' }
+      max_tests: { required: false, default: '0' }
+  schedule:
+    - cron: '*/15 * * * *'
+  push:
+    branches: [main]
+    paths: ['.github/workflows/scrape.yml', 'src/**']
+
+env:
+  PYTHON_VERSION: '3.12'
+  PYTHONUNBUFFERED: '1'
+
+concurrency:
+  group: scrape-pro
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions: { contents: write }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '${{ env.PYTHON_VERSION }}' }
+      - name: Install deps
+        run: |
+          pip install -r requirements.txt
+          playwright install chromium --with-deps
+      - uses: actions/cache@v4
+        with:
+          path: |
+            data/tests/
+            data/progress.json
+            data/submit_format.json
+          key: scrape-pro-v1
+          restore-keys: scrape-pro-v1
+      - name: Run scraper
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
+        run: |
+          TL="${{ github.event.inputs.time_limit_minutes }}"
+          [ -z "$TL" ] && TL=350
+          MT="${{ github.event.inputs.max_tests }}"
+          [ -z "$MT" ] && MT=0
+          python -m src.mass_scraper --time-limit-minutes "$TL" --max-tests "$MT" 2>&1 || true
+      - name: Commit cookies + progress
+        if: always()
+        run: |
+          git config user.name "PRO Scraper Bot"
+          git config user.email "scraper@bot.local"
+          git add cookies/account_pro.json data/progress.json data/submit_format.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "chore: rotate cookies + progress [skip ci]"
+          git push 2>&1 || true
+      - name: Summary
+        if: always()
+        run: |
+          echo "## PRO Scrape Summary" >> $GITHUB_STEP_SUMMARY
+          python3 -c "
+          import json
+          p=json.load(open('data/progress.json'))
+          s=len(p.get('scraped_test_ids',[]))
+          t=len(p.get('test_inventory',[]))
+          print(f'- Scraped: {s}/{t} ({s/t*100:.1f}%)' if t else '- No inventory yet')
+          " >> $GITHUB_STEP_SUMMARY || true
