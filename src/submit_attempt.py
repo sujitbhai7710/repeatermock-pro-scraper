@@ -28,6 +28,7 @@ async def start_attempt(context, test_id: str, cookie_str: str):
 
     if resp.status == 429:
         retry_after = int(resp.headers.get("retry-after", "60"))
+        retry_after = min(retry_after, 120)  # cap at 2 min — server sometimes sends 56000s
         raise RateLimited(retry_after, "start")
     if resp.status == 402:
         raise AuthExpired(f"Payment required — PRO trial expired for {test_id}")
@@ -54,6 +55,7 @@ async def submit_attempt(context, test_id: str, cookie_str: str):
 
     if resp.status == 429:
         retry_after = int(resp.headers.get("retry-after", "10"))
+        retry_after = min(retry_after, 120)  # cap at 2 min
         raise RateLimited(retry_after, "submit")
     if resp.status == 401 or "session_expired" in body:
         raise AuthExpired(f"401 session_expired on /submit for {test_id}")

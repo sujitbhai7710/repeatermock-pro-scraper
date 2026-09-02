@@ -230,8 +230,14 @@ async def run(time_limit_minutes: int = 0, max_tests: int = 0):
                     break
 
             except RateLimited as e:
-                print(f"    ⏸ Rate limited ({e.scope}) — sleeping {e.retry_after}s", flush=True)
+                retry_count_test = locals().get('retry_count_test', 0) + 1
+                print(f"    ⏸ Rate limited ({e.scope}) — sleeping {e.retry_after}s (retry {retry_count_test}/3)", flush=True)
                 await asyncio.sleep(e.retry_after)
+                if retry_count_test >= 3:
+                    print(f"    ✗ Max retries — marking as partial", flush=True)
+                    partial_ids.add(test["id"])
+                    tests_done += 1
+                    retry_count_test = 0
                 continue  # retry same test
 
             except Exception as e:
