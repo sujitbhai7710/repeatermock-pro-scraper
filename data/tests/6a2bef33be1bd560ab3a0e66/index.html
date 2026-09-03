@@ -1,0 +1,2216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alphabet or Word Test - Dictionary Order - 01 — Mock Test + Solutions</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+  svg: { fontCache: 'global' },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@4.1.0/tex-mml-chtml.js" id="MathJax-script" async></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8f9fa; color: #1a1a2e; line-height: 1.7; }
+.container { max-width: 800px; margin: 0 auto; padding: 16px; }
+
+/* Top nav bar — clones RepeaterMock */
+.navbar { background: #1a1a2e; color: white; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+.navbar .logo { font-weight: 800; font-size: 18px; color: #4ade80; }
+.navbar .timer { font-size: 18px; font-weight: 700; color: #facc15; }
+.navbar .nav-actions { display: flex; gap: 12px; align-items: center; }
+.navbar .submit-btn { background: #dc2626; color: white; border: 0; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; display: none; }
+.navbar .submit-btn.visible { display: inline-block; }
+.navbar .view-solutions { background: #2563eb; color: white; border: 0; padding: 8px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; }
+
+/* Test header */
+.test-header { background: white; border-radius: 12px; padding: 20px; margin: 16px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.test-header h1 { font-size: 22px; margin-bottom: 8px; }
+.test-header .meta { font-size: 14px; color: #6b7280; }
+.test-header .badge { display: inline-block; background: #e0e7ff; color: #4338ca; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-right: 8px; }
+
+/* Analysis card */
+.analysis-card { background: white; border-radius: 12px; padding: 20px; margin: 16px 0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); display: none; }
+.analysis-card.visible { display: block; }
+.analysis-card h2 { color: #4338ca; margin-bottom: 16px; font-size: 20px; }
+.analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.stat { text-align: center; padding: 16px; border-radius: 10px; background: #f3f4f6; }
+.stat .value { font-size: 32px; font-weight: 800; }
+.stat .label { font-size: 11px; color: #6b7280; text-transform: uppercase; margin-top: 4px; }
+.rank { color: #4338ca; } .pct { color: #ec4899; } .avg { color: #10b981; } .total { color: #f59e0b; }
+
+/* Question card — clones RepeaterMock */
+.question-card { background: white; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); overflow: hidden; }
+.q-header { background: #f9fafb; padding: 12px 20px; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+.q-number { font-weight: 700; color: #4338ca; font-size: 14px; }
+.q-marks { font-size: 12px; color: #6b7280; }
+.q-marks .pos { color: #10b981; font-weight: 600; }
+.q-marks .neg { color: #ef4444; }
+.q-body { padding: 20px; }
+
+/* Question text — RepeaterMock style */
+.q-text { font-size: 15px; margin-bottom: 16px; }
+.q-text p { margin-bottom: 8px; }
+.q-text img { max-width: 100%; border-radius: 8px; margin: 8px 0; display: block; }
+.q-text .math-tex { display: inline; }
+
+/* Options — RepeaterMock style */
+.options { margin-left: 4px; }
+.option { display: flex; align-items: flex-start; padding: 12px 16px; margin-bottom: 8px; border-radius: 10px; border: 2px solid #e5e7eb; cursor: pointer; transition: all 0.15s; }
+.option:hover { border-color: #c7d2fe; background: #f0f4ff; }
+.option.selected { border-color: #4338ca; background: #eef2ff; }
+.option.correct { border-color: #10b981; background: #d1fae5; }
+.option.wrong { border-color: #ef4444; background: #fee2e2; }
+.option-letter { font-weight: 700; margin-right: 12px; min-width: 20px; font-size: 15px; }
+.option.correct .option-letter { color: #059669; }
+.option.wrong .option-letter { color: #dc2626; }
+.option.selected .option-letter { color: #4338ca; }
+.option-text { flex: 1; font-size: 14px; }
+.option-text img { max-width: 100%; border-radius: 4px; margin: 4px 0; }
+.option-text p { margin-bottom: 4px; }
+.option-check { margin-left: auto; font-size: 20px; }
+.option.correct .option-check { color: #10b981; }
+
+/* Solution — RepeaterMock style */
+.solution { margin-top: 16px; padding: 16px; background: #f0f9ff; border-radius: 10px; border-left: 4px solid #0ea5e9; display: none; }
+.solution.visible { display: block; }
+.solution-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.solution-icon { background: #0ea5e9; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.solution-title { font-weight: 700; color: #0ea5e9; font-size: 14px; }
+.solution-content { font-size: 14px; color: #1e3a5f; line-height: 1.8; }
+.solution-content p { margin-bottom: 8px; }
+.solution-content img { max-width: 100%; border-radius: 8px; margin: 8px 0; display: block; }
+.solution-content .math-tex { display: inline; }
+
+/* Question palette — clones RepeaterMock */
+.palette { position: fixed; right: 20px; top: 80px; background: white; border-radius: 12px; padding: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 50; max-width: 200px; }
+.palette-title { font-size: 12px; color: #6b7280; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; }
+.palette-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+.palette-item { width: 24px; height: 24px; border-radius: 6px; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-size: 10px; cursor: pointer; border: 1px solid #d1d5db; }
+.palette-item.answered { background: #10b981; color: white; border-color: #059669; }
+.palette-item.current { border-color: #4338ca; border-width: 2px; }
+
+/* Score banner */
+.score-banner { background: linear-gradient(135deg, #4338ca 0%, #7c3aed 100%); color: white; border-radius: 12px; padding: 24px; margin: 16px 0; text-align: center; display: none; }
+.score-banner.visible { display: block; }
+.score-banner .score { font-size: 48px; font-weight: 800; }
+.score-banner .score-label { font-size: 14px; opacity: 0.9; margin-top: 4px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .palette { display: none; }
+  .analysis-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+  <div class="logo">RepeaterMock</div>
+  <div class="nav-actions">
+    <div class="timer" id="timer">⏱ 60:00</div>
+    <button class="submit-btn" id="submitBtn" onclick="submitTest()">Submit Test</button>
+    <button class="view-solutions" id="viewSolutionsBtn" onclick="toggleSolutions()" style="display:none;">📖 Show Solutions</button>
+  </div>
+</div>
+
+<div class="container">
+  <!-- Test header -->
+  <div class="test-header">
+    <h1>Alphabet or Word Test - Dictionary Order - 01</h1>
+    <div class="meta">
+      <span class="badge">📋 50 Questions</span>
+      <span class="badge">⏱ 60 min</span>
+      <span class="badge">📊 100 Marks</span>
+      <span class="badge">✅ Guest Mode</span>
+    </div>
+  </div>
+
+  <!-- Score banner (hidden until submit) -->
+  <div class="score-banner" id="scoreBanner">
+    <div class="score" id="scoreValue">0/50</div>
+    <div class="score-label" id="scoreLabel">Your Score</div>
+  </div>
+
+  <!-- Analysis card (hidden until submit) -->
+  <div class="analysis-card" id="analysisCard">
+    <h2>📈 Performance Analysis</h2>
+    <div class="analysis-grid" id="analysisGrid"></div>
+  </div>
+
+  <script>
+  const analysisData = {
+    rank: 2696,
+    percentile: 7.2289156626506035,
+    avgMarks: 71.1629948364888,
+    totalStudents: 2905
+  };
+  </script>
+
+  <!-- Questions -->
+  <div id="questions">
+
+    <div class="question-card" id="q0" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 1</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Illegitimate</p>
+
+<p>2. Illegality</p>
+
+<p>3. Illuminate</p>
+
+<p>4. Illiterate</p>
+
+<p>5. Illegible</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(0, 1)"><div class="option-letter">A</div><div class="option-text">1, 2, 3, 4, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(0, 2)"><div class="option-letter">B</div><div class="option-text">2, 5, 1, 4, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(0, 3)"><div class="option-letter">C</div><div class="option-text">3, 5, 1, 2, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(0, 4)"><div class="option-letter">D</div><div class="option-text">3, 5, 2, 4, 1</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol0"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$32</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q1" data-correct="3">
+      <div class="q-header">
+        <div class="q-number">Question 2</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1.Assertive</p>
+
+<p>2.Astringent</p>
+
+<p>3.Astronomy</p>
+
+<p>4.Aspirations</p>
+
+<p>5.Ascertain</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(1, 1)"><div class="option-letter">A</div><div class="option-text">4, 5, 1 ,2, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(1, 2)"><div class="option-letter">B</div><div class="option-text">4, 2, 1, 3, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(1, 3)"><div class="option-letter">C</div><div class="option-text">5, 4, 1, 2, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(1, 4)"><div class="option-letter">D</div><div class="option-text">3, 4, 1, 2, 5</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol1"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style="">The option that represents the correct order of the given words as they would appear in an English dictionary is shown below:</p>
+
+<p style=""><span style="">5.<strong>Asc</strong>ertain</span></p>
+
+<p style="">4.<strong>Asp</strong>irations</p>
+
+<p style="">1.<strong>Ass</strong>ertive</p>
+
+<p style="">2.<strong>Astri</strong>ngent</p>
+
+<p style="">3.<strong>Astro</strong>nomy</p>
+
+<p style="">Hence, <span style="font-weight: 700;">'</span><strong><span style="">5, 4, 1, 2, 3</span></strong><span style="font-weight: 700;">' </span>is the correct answer.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q2" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 3</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Necessary</p>
+
+<p>2. Networks</p>
+
+<p>3. Negotiate</p>
+
+<p>4. Needlework</p>
+
+<p>5. Neigh</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(2, 1)"><div class="option-letter">A</div><div class="option-text">4, 1, 3, 5, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(2, 2)"><div class="option-letter">B</div><div class="option-text">1, 4, 3, 5, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(2, 3)"><div class="option-letter">C</div><div class="option-text">3, 4, 1, 5, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(2, 4)"><div class="option-letter">D</div><div class="option-text">3, 1, 5, 4, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol2"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style="">The option that represents the correct order of the given words as they would appear in an English dictionary is shown below:</p>
+
+<p style="">1. <strong>Nec</strong>essary</p>
+
+<p style="">4. <strong>Nee</strong>dlework</p>
+
+<p style="">3. <strong>Neg</strong>otiate</p>
+
+<p style=""><span style="">5. <strong>Nei</strong>gh</span></p>
+
+<p style="">2. <strong>Net</strong>works</p>
+
+<p style="">Hence, <span style="font-weight: 700;">'</span><strong><span style="">1, 4, 3, 5, 2</span></strong><span style="font-weight: 700;"><strong>'</strong> </span>is the correct answer.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q3" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 4</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Hypodermic</p>
+
+<p>2. Hypocrite</p>
+
+<p>3. Hysterical</p>
+
+<p>4. Hypothermia</p>
+
+<p>5. Hypotenuse</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(3, 1)"><div class="option-letter">A</div><div class="option-text">1, 2, 3, 4, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(3, 2)"><div class="option-letter">B</div><div class="option-text">4, 3, 5, 1, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(3, 3)"><div class="option-letter">C</div><div class="option-text">3, 5, 1, 2, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(3, 4)"><div class="option-letter">D</div><div class="option-text">2, 1, 5, 4, 3</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol3"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>According to the sequence in the dictionary:</p>
+
+<p>The correct order of the given words is:</p>
+
+<p>2. <strong>Hyp<u>oc</u></strong>rite</p>
+
+<p>1. <strong>Hyp<u>od</u></strong>ermic</p>
+
+<p>5. <strong>Hyp<u>ote</u></strong>nuse</p>
+
+<p>4<strong>. Hy<u>poth</u></strong>ermia</p>
+
+<p>3. <strong>Hy<u>s</u></strong>terical</p>
+
+<p>Hence, the correct answer is<strong> "2, 1, 5, 4, 3". </strong></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q4" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 5</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Which option represents the correct order of the given words as they would appear in the English dictionary?</p>
+
+<p>1. Measurement</p>
+
+<p>2. Methodology</p>
+
+<p>3. Melanin</p>
+
+<p>4. Metaphor</p>
+
+<p>5. Meritorious</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(4, 1)"><div class="option-letter">A</div><div class="option-text">3, 1, 5, 4, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(4, 2)"><div class="option-letter">B</div><div class="option-text">1, 3, 5, 4, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(4, 3)"><div class="option-letter">C</div><div class="option-text">1, 4, 2, 5, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(4, 4)"><div class="option-letter">D</div><div class="option-text">1, 5, 3, 2, 4</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol4"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p><strong><span style="">Explanation:</span></strong></p>
+
+<p><span style="">The correct order according to the English dictionary is:<br />
+1. <strong>M<u>ea</u></strong>surement</span></p>
+
+<p><span style="">3. <strong>M<u>el</u></strong>anin</span></p>
+
+<p><span style="">5. <strong>M<u>er</u></strong>itorious</span></p>
+
+<p><span style="">4. <strong>M<u>et</u></strong>aphor</span></p>
+
+<p><span style="">2. <strong>Me<u>th</u></strong>odology<br />
+So <strong>the correct order 1, 3, 5, 4, 2.</strong></span></p>
+
+<p><strong><span style="">Hence, the correct answer is option 2.</span></strong></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q5" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 6</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Arrange the given words in the sequence in which they occur in the dictionary.</p>
+
+<p>1. Heal</p>
+
+<p>2. Head</p>
+
+<p>3. Health</p>
+
+<p>4. Heap</p>
+
+<p>5. Heat</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(5, 1)"><div class="option-letter">A</div><div class="option-text">1,4,2,5,3</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(5, 2)"><div class="option-letter">B</div><div class="option-text">1,4,2,3,5</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(5, 3)"><div class="option-letter">C</div><div class="option-text">2,1,3,5,4</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(5, 4)"><div class="option-letter">D</div><div class="option-text">2,1,3,4,5</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol5"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$57</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q6" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 7</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary. (Note: the given words may or may not be meaningful words).</p>
+
+<p>1.Generation</p>
+
+<p>2.Govern</p>
+
+<p>3.Gender</p>
+
+<p>4.Geothermal</p>
+
+<p>5.Generous</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(6, 1)"><div class="option-letter">A</div><div class="option-text">2, 1, 5, 4, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(6, 2)"><div class="option-letter">B</div><div class="option-text"> 2, 1, 5, 3, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(6, 3)"><div class="option-letter">C</div><div class="option-text">3, 1, 5, 2, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(6, 4)"><div class="option-letter">D</div><div class="option-text">3, 1, 5, 4, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol6"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The words arranged in the English dictionary order as:</p>
+
+<p style="">3. <strong>Gend</strong>er</p>
+
+<p style="">1. <strong>Genera</strong>tion</p>
+
+<p style="">5. <strong>Genero</strong>us</p>
+
+<p style="">4. <strong>Geo</strong>thermal</p>
+
+<p style="">2. <strong>Go</strong>vern</p>
+
+<p style="">Thus, the words arranged in English dictionary order as '<span style="">3, 1, 5, 4, 2</span>'.</p>
+
+<p style="">Hence, the correct answer is '<u><strong>option 4</strong></u>'.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q7" data-correct="1">
+      <div class="q-header">
+        <div class="q-number">Question 8</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text">After arranging the given words according to dictionary order, which word will come at ‘Third’ position?<br />
+1. Telescope<br />
+2. Telephone<br />
+3. Telegram<br />
+4. Telecast<br />
+5. Telepath</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(7, 1)"><div class="option-letter">A</div><div class="option-text">Telepath</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(7, 2)"><div class="option-letter">B</div><div class="option-text">Telegram</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(7, 3)"><div class="option-letter">C</div><div class="option-text">Telephone</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(7, 4)"><div class="option-letter">D</div><div class="option-text">Telecast</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol7"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The order of words according to dictionary,</p>
+
+<p><span style="">4. <strong>Telec</strong>ast</span></p>
+
+<p><span style="">3. <strong>Teleg</strong>ram</span></p>
+
+<p><span style="">5. <strong>Telepa</strong>th</span></p>
+
+<p><span style="">2. <strong>Teleph</strong>one</span></p>
+
+<p><span style="">1. <strong>Teles</strong>cope</span></p>
+
+<p><span style="">Here Telepath will come at ‘Third’ position.</span></p>
+
+<p><span style="">Hence, <strong>'Option 1'</strong> is the correct answer.</span></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q8" data-correct="3">
+      <div class="q-header">
+        <div class="q-number">Question 9</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Facsimile</p>
+
+<p>2. Frightful</p>
+
+<p>3. Favourable</p>
+
+<p>4. Fructification</p>
+
+<p>5. Fanatical</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(8, 1)"><div class="option-letter">A</div><div class="option-text">1, 4, 2, 5, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(8, 2)"><div class="option-letter">B</div><div class="option-text">1, 3, 4, 2, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(8, 3)"><div class="option-letter">C</div><div class="option-text">1, 5, 3, 2, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(8, 4)"><div class="option-letter">D</div><div class="option-text">1, 3, 4, 5, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol8"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p><strong>Explanation : </strong>The option that represents the correct order of the given words as they would appear in an english dictionary is shown below :</p>
+
+<p>1. <strong>Fa<u>c</u></strong>simile</p>
+
+<p>5. <strong>Fa<u>n</u></strong>atical</p>
+
+<p>3. <strong>Fa<u>v</u></strong>ourable</p>
+
+<p>2. <strong>F<u>r</u></strong>ightful</p>
+
+<p>4. <strong>Fr<u>u</u></strong>ctification</p>
+
+<p>Hence, <strong>1,5,3,2,4</strong> is the correct answer.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q9" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 10</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text">Select the option that represents the correct order of the given words as they would appear in an English dictionary.<br />
+1. Elegant<br />
+2. Electrician<br />
+3. Elephant<br />
+4. Elated<br />
+5. Elongated</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(9, 1)"><div class="option-letter">A</div><div class="option-text">4, 5, 3, 1, 2 </div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(9, 2)"><div class="option-letter">B</div><div class="option-text">3, 5, 4, 1, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(9, 3)"><div class="option-letter">C</div><div class="option-text">3, 4, 1, 2, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(9, 4)"><div class="option-letter">D</div><div class="option-text">4, 2, 1, 3, 5</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol9"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The logic followed here is:</p>
+
+<p>The option that represents the correct order of the given words as they would appear in english dictionary shown below</p>
+
+<p>4. <strong>El<u>a</u></strong>ted</p>
+
+<p>2.<strong> El<u>ec</u></strong>trician</p>
+
+<p>1. <strong>Ele<u>g</u></strong>ant</p>
+
+<p>3. <strong>Ele<u>p</u></strong>hant</p>
+
+<p>5.<strong> El<u>o</u></strong>ngated</p>
+
+<p>Hence,  <strong>4, 2, 1, 3, 5</strong> is the correct answer.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q10" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 11</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Sarcastic</p>
+
+<p>2. Satisfaction</p>
+
+<p>3. Salutation</p>
+
+<p>4. Sanction</p>
+
+<p>5. Sacrifice</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(10, 1)"><div class="option-letter">A</div><div class="option-text">3, 5, 4, 1, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(10, 2)"><div class="option-letter">B</div><div class="option-text">5, 3, 4, 1, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(10, 3)"><div class="option-letter">C</div><div class="option-text">4, 5, 3, 1, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(10, 4)"><div class="option-letter">D</div><div class="option-text">4, 5, 2, 1, 3</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol10"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>Here, we need to arrange the words in alphabetic order.</p>
+
+<p>So, the dictionary order arrangement would be:</p>
+
+<p><span style="">5. <strong>Sac</strong>rifice</span></p>
+
+<p><span style="">3. <strong>Sal</strong>utation</span></p>
+
+<p><span style="">4. <strong>San</strong>ction</span></p>
+
+<p style="">1. <strong>Sar</strong>castic</p>
+
+<p style="">2. <strong>Sat</strong>isfaction</p>
+
+<p style="">Hence, the order of arrangement in alphabetic order is '<u><strong><span style="">5, 3, 4, 1, 2</span></strong></u>'.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q11" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 12</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Deceive</p>
+
+<p>2. Deceptive</p>
+
+<p>3. Decapitate</p>
+
+<p>4. Decency</p>
+
+<p>5. Decamp</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(11, 1)"><div class="option-letter">A</div><div class="option-text">3, 2, 1, 5, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(11, 2)"><div class="option-letter">B</div><div class="option-text">4, 2, 1, 3, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(11, 3)"><div class="option-letter">C</div><div class="option-text">5, 3, 1, 2, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(11, 4)"><div class="option-letter">D</div><div class="option-text">5, 3, 1, 4, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol11"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>Arranging all the words as per their order in the dictionary:</p>
+
+<p>5. <strong>Decam</strong>p</p>
+
+<p>3. <strong>Decap</strong>itate</p>
+
+<p>1. <strong>Decei</strong>ve</p>
+
+<p>4. <strong>Decen</strong>cy</p>
+
+<p>2. <strong>Decep</strong>tive</p>
+
+<p>Hence, <strong>5, 3, 1, 4, 2 </strong>is the correct order.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q12" data-correct="1">
+      <div class="q-header">
+        <div class="q-number">Question 13</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Moulder</p>
+
+<p>2. Mother</p>
+
+<p>3. Motet</p>
+
+<p>4. Moth</p>
+
+<p>5. Motif </p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(12, 1)"><div class="option-letter">A</div><div class="option-text"><span style=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">3, 4, 2, 5, 1</font></font></span></div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(12, 2)"><div class="option-letter">B</div><div class="option-text"><span style=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4, 2, 5, 3, 1</font></font></span></div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(12, 3)"><div class="option-letter">C</div><div class="option-text"><span style=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">5, 3, 1, 4, 2 </font></font></span></div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(12, 4)"><div class="option-letter">D</div><div class="option-text"><span style=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">2, 5, 3, 1, 4 </font></font></span></div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol12"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style=""><span style="font-weight: 700;">Explanation:</span></p>
+
+<div>Dictionary order of the given word is:</div>
+
+<p>3. <span style="">Mo<u><strong>t</strong></u>et</span></p>
+
+<p><span style="">4. Mot<strong><u>h</u></strong></span></p>
+
+<p><span style="">2. Moth<strong><u>e</u></strong>r</span></p>
+
+<p><span style="">5. Mot<strong><u>i</u></strong>f </span></p>
+
+<p><span style="">1. Mo<u><strong>u</strong></u>lder</span></p>
+
+<p><span style="">Hence,<strong> "Option 1"</strong> is the correct answer.</span></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q13" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 14</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Permanent</p>
+
+<p>2. Pedalogy</p>
+
+<p>3. Permutation</p>
+
+<p>4. Pensioner</p>
+
+<p>5. Peculation</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(13, 1)"><div class="option-letter">A</div><div class="option-text">5, 4, 2, 1, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(13, 2)"><div class="option-letter">B</div><div class="option-text">2, 5, 3, 1, 4, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(13, 3)"><div class="option-letter">C</div><div class="option-text">2, 5, 1, 4, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(13, 4)"><div class="option-letter">D</div><div class="option-text">5, 2, 4, 1, 3</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol13"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary is shown below:</p>
+
+<p>5. Pe<u><strong>culation</strong></u></p>
+
+<p>2. Pe<u><strong>dalogy</strong></u></p>
+
+<p>4. Pe<u><strong>nsioner</strong></u></p>
+
+<p>1. Pe<u><strong>rmanent</strong></u></p>
+
+<p>3. Pe<u><strong>rmutation</strong></u></p>
+
+<p><span style=" ">Hence, ‘</span><strong>5, 2, 4, 1, 3</strong><span style=" ">’ is the correct answer.</span></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q14" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 15</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Perilous</p>
+
+<p>2. Pessimist</p>
+
+<p>3. Pedestrian</p>
+
+<p>4. Perceive</p>
+
+<p>5. Perfect</p>
+
+<p>6. Peasant</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(14, 1)"><div class="option-letter">A</div><div class="option-text">6, 4, 3, 1, 2, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(14, 2)"><div class="option-letter">B</div><div class="option-text">6, 3, 4, 5, 1, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(14, 3)"><div class="option-letter">C</div><div class="option-text">3, 6, 5, 4, 2, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(14, 4)"><div class="option-letter">D</div><div class="option-text"> 3, 5, 4, 6, 1, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol14"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$3e</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q15" data-correct="3">
+      <div class="q-header">
+        <div class="q-number">Question 16</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Expanse</p>
+
+<p>2. Expansive</p>
+
+<p>3. Expandable</p>
+
+<p>4. Expansion</p>
+
+<p>5. Expanded</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(15, 1)"><div class="option-letter">A</div><div class="option-text">3-2-1-5-4</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(15, 2)"><div class="option-letter">B</div><div class="option-text">5-3-1-2-4</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(15, 3)"><div class="option-letter">C</div><div class="option-text">3-5-1-4-2</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(15, 4)"><div class="option-letter">D</div><div class="option-text">1-2-5-3-4</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol15"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p><span style="">Arranging all the words as per their order in the dictionary:</span></p>
+
+<p style="">3. Expan<strong><u>da</u></strong>ble</p>
+
+<p style="">5. Expan<strong><u>de</u></strong>d</p>
+
+<p style=""><span style="">1.</span> Expan<span style=""><strong><u>se</u></strong></span></p>
+
+<p style=""><span style="">4.</span> Expan<span style=""><strong><u>sio</u></strong>n</span></p>
+
+<p style=""><span style="">2. </span>Expan<span style=""><strong><u>siv</u></strong>e</span></p>
+
+<p style="">Hence, <strong>3-5-1-4-2 </strong>is the correct answer. </p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q16" data-correct="1">
+      <div class="q-header">
+        <div class="q-number">Question 17</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Tattoo</p>
+
+<p>2. Tatters</p>
+
+<p>3. Tatting</p>
+
+<p>4. Tattle</p>
+
+<p>5. Taut</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(16, 1)"><div class="option-letter">A</div><div class="option-text">2, 3, 4, 1, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(16, 2)"><div class="option-letter">B</div><div class="option-text">2, 4, 5, 3, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(16, 3)"><div class="option-letter">C</div><div class="option-text">5, 4, 3, 2, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(16, 4)"><div class="option-letter">D</div><div class="option-text">4, 5, 1, 2, 3</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol16"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The correct order arranged in English dictionary is:</p>
+
+<p style="">2. <u><strong>Tatte</strong></u>rs</p>
+
+<p style="">3. <u><strong>Tatti</strong></u>ng</p>
+
+<p style="">4. <u><strong>Tattl</strong></u>e</p>
+
+<p style="">1. <u><strong>Tatto</strong></u>o</p>
+
+<p style="">5. <u><strong>Tau</strong></u>t</p>
+
+<p style="">Thus, the order of words arranged in English dictionary is '<span style="">2, 3, 4, 1, 5</span>'.</p>
+
+<p><span style="">Hence, the correct answer is '<u><strong>option 1</strong></u>'.</span></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q17" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 18</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Arrange the following words in the order in which they would appear in an English dictionary.</p>
+
+<p>1. Temper</p>
+
+<p>2. Temple</p>
+
+<p>3. Tamarind</p>
+
+<p>4. Tender</p>
+5. Tenacity</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(17, 1)"><div class="option-letter">A</div><div class="option-text">3, 2, 1, 4, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(17, 2)"><div class="option-letter">B</div><div class="option-text">3, 1, 2, 5, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(17, 3)"><div class="option-letter">C</div><div class="option-text">1, 3, 2, 5, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(17, 4)"><div class="option-letter">D</div><div class="option-text">3, 1, 5, 4, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol17"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>Tamarind comes first in the order.</p>
+
+<p>It is followed by Temper.</p>
+
+<p>Temper is followed by Temple.</p>
+
+<p>Temple is followed by Tenacity.</p>
+
+<p>Tenacity is followed by Tender.</p>
+
+<p>The correct dictionary order is,</p>
+
+<p>Tamarind (3) → Temper (1) → Temple (2) → Tenacity (5) → Tender (4)</p>
+Hence, option 2 is the correct answer.</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q18" data-correct="3">
+      <div class="q-header">
+        <div class="q-number">Question 19</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p> Arrange the given words in the sequence in which they occur in the dictionary.</p>
+
+<p>1. Maternity</p>
+
+<p>2. Mundane</p>
+
+<p>3. Maternal</p>
+
+<p>4. Motor</p>
+
+<p>5. Mother</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(18, 1)"><div class="option-letter">A</div><div class="option-text">3, 2, 4, 5, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(18, 2)"><div class="option-letter">B</div><div class="option-text">3, 1, 4, 2, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(18, 3)"><div class="option-letter">C</div><div class="option-text">3, 1, 5, 4, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(18, 4)"><div class="option-letter">D</div><div class="option-text">1, 4, 5, 2, 3</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol18"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$55</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q19" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 20</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>After arranging the given words according to dictionary order, which word will come at ‘Fifth’ position?</p>
+
+<p><span style="">1. Version</span></p>
+
+<p><span style="">2. Versus </span></p>
+
+<p><span style="">3. Versicolour</span></p>
+
+<p><span style="">4. Verse</span></p>
+
+<p><span style="">5. Verso</span></p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(19, 1)"><div class="option-letter">A</div><div class="option-text"><span style="">Verso</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(19, 2)"><div class="option-letter">B</div><div class="option-text"><span style="">Versus</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(19, 3)"><div class="option-letter">C</div><div class="option-text"><span style="">Version</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(19, 4)"><div class="option-letter">D</div><div class="option-text"><span style="">Verse</span></div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol19"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The pattern followed here is:</p>
+
+<p>All the given words are arranged as per dictionary order.</p>
+
+<p>4. Vers<u><strong>e</strong></u></p>
+
+<p>3. Vers<u><strong>i</strong></u>colour</p>
+
+<p>1. Versi<u><strong>o</strong></u>n</p>
+
+<p>5. Vers<u><strong>o</strong></u></p>
+
+<p>2. Vers<u><strong>us</strong></u></p>
+
+<p>So, the word Versus has come at the 'Fifth' position.</p>
+
+<p>Hence, the correct answer is <strong>"Versus".</strong></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q20" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 21</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in and English dictionary.</p>
+
+<p>1. Player</p>
+
+<p>2. Plaster</p>
+
+<p>3. Placard</p>
+
+<p>4. Planner</p>
+
+<p>5. Pleader</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(20, 1)"><div class="option-letter">A</div><div class="option-text">4,3,2,1,5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(20, 2)"><div class="option-letter">B</div><div class="option-text">5,4,2,1,3</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(20, 3)"><div class="option-letter">C</div><div class="option-text">2,4,3,1,5</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(20, 4)"><div class="option-letter">D</div><div class="option-text">3,4,2,1,5</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol20"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style="">The correct option that indicates the arrangement of the given words in the order in which they appear in and English dictionary is shown below:</p>
+
+<p style="">3. <strong>Plac</strong>ard</p>
+
+<p style="">4. <strong>Plan</strong>ner</p>
+
+<p style="">2. <strong>Plas</strong>ter</p>
+
+<p style=""><span style="">1. <strong>Pla</strong>yer</span></p>
+
+<p style="">5. <strong>Ple</strong>ader</p>
+
+<p style="">Hence, '<strong><span style="">3,4,2,1,5</span></strong>' is the correct answer.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q21" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 22</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Marathon</p>
+
+<p>2. Manuscript</p>
+
+<p>3. Marvellous</p>
+
+<p>4. Manipulation</p>
+
+<p>5. Management</p>
+
+<p>6. Mandatory</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(21, 1)"><div class="option-letter">A</div><div class="option-text">6, 5, 2, 4, 3, 1  </div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(21, 2)"><div class="option-letter">B</div><div class="option-text"><span style="">5, 4, 6, 1, 2, 3</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(21, 3)"><div class="option-letter">C</div><div class="option-text"><span style="">4, 5, 1, 6, 3, 2</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(21, 4)"><div class="option-letter">D</div><div class="option-text"><span style="">5, 6, 4, 2, 1, 3</span></div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol21"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$38</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q22" data-correct="3">
+      <div class="q-header">
+        <div class="q-number">Question 23</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given the words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Photographic</p>
+
+<p>2. Photocopier</p>
+
+<p>3. Photography</p>
+
+<p>4. Photographer</p>
+
+<p>5. Photocopy</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(22, 1)"><div class="option-letter">A</div><div class="option-text">1, 2, 3, 4, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(22, 2)"><div class="option-letter">B</div><div class="option-text">3, 5, 1, 4, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(22, 3)"><div class="option-letter">C</div><div class="option-text">2, 5, 4, 1, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(22, 4)"><div class="option-letter">D</div><div class="option-text">4, 1, 5, 3, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol22"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p><span style="">According to the sequence in the dictionary:</span></p>
+
+<p><span style="">2. <strong>Photocop<u>i</u></strong>er</span></p>
+
+<p><span style="">5. <strong>Photocop<u>y</u></strong></span></p>
+
+<p><span style="">4. <strong>Photo<u>g</u>raph<u>e</u></strong>r</span></p>
+
+<p><span style="">1. <strong>Photograph</strong><u><strong>i</strong></u>c</span></p>
+
+<p><span style="">3. <strong>Photograph<u>y</u></strong></span></p>
+
+<p><span style="">Hence, the correct option is <strong>"2, 5, 4, 1, 3"</strong>.</span></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q23" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 24</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Arrange the given words in the sequence in which they occur in the dictionary.</p>
+
+<p>1. Manger</p>
+
+<p>2. Mango</p>
+
+<p>3. Mangrove</p>
+
+<p>4. Manage</p>
+
+<p>5. Manager</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(23, 1)"><div class="option-letter">A</div><div class="option-text"><span style="">4, 5, 3, 2, 1</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(23, 2)"><div class="option-letter">B</div><div class="option-text"><span style="">4, 5, 1, 2, 3</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(23, 3)"><div class="option-letter">C</div><div class="option-text"><span style="">4, 5, 3, 1, 2</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(23, 4)"><div class="option-letter">D</div><div class="option-text"><span style="">4, 5, 1, 3, 2</span></div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol23"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style="color: rgb(33, 37, 41);">The correct order as per the dictionary is:</p>
+
+<p>4. Man<u><strong>age</strong></u></p>
+
+<p>5. Man<u><strong>ager</strong></u></p>
+
+<p style="color: rgb(33, 37, 41);">1. Man<u><strong>ge</strong></u>r</p>
+
+<p style="color: rgb(33, 37, 41);">2. Man<u><strong>go</strong></u></p>
+
+<p style="color: rgb(33, 37, 41);">3. Man<u><strong>gr</strong></u>ove</p>
+
+<p style="color: rgb(33, 37, 41);">Hence, the correct answer is <strong><span style="font-weight: bolder;">"</span><span style="color: rgb(33, 37, 41);">4, 5, 1, 2, 3</span><span style="font-weight: bolder;">"</span></strong>.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q24" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 25</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Arrange the given words in the sequence in which they occur in the dictionary.</p>
+
+<p>1. Mayor</p>
+
+<p>2. Maybe</p>
+
+<p>3. May</p>
+
+<p>4. Mayst</p>
+
+<p>5. Mayfly</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(24, 1)"><div class="option-letter">A</div><div class="option-text">3, 2, 1, 5, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(24, 2)"><div class="option-letter">B</div><div class="option-text">3, 2, 4, 5, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(24, 3)"><div class="option-letter">C</div><div class="option-text">3, 2, 1, 4, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(24, 4)"><div class="option-letter">D</div><div class="option-text">3, 2, 5, 1, 4</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol24"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$56</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q25" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 26</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary. </p>
+
+<p>1. Hatchability</p>
+
+<p>2. Hatchel</p>
+
+<p>3. Hatchers</p>
+
+<p>4. Hatchback</p>
+
+<p>5. Hatchings</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(25, 1)"><div class="option-letter">A</div><div class="option-text">4, 1, 2, 3, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(25, 2)"><div class="option-letter">B</div><div class="option-text">4, 1, 2, 5, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(25, 3)"><div class="option-letter">C</div><div class="option-text">1, 4, 2, 5, 3 </div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(25, 4)"><div class="option-letter">D</div><div class="option-text">1, 4, 2, 3, 5 </div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol25"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The correct order of the given words according to the English dictionary is:</p>
+
+<p>1.<span style=""> <strong>Hatch<u>a</u></strong>bility</span></p>
+
+<p>4. <span style=""><strong>Hatch<u>b</u></strong>ack</span></p>
+
+<p>2. <span style=""><strong>Hatch<u>e</u></strong>l</span></p>
+
+<p>3. <span style=""><strong>Hatche<u>r</u></strong>s</span></p>
+
+<p>5. <span style=""><strong>Hatch<u>i</u></strong>ngs</span></p>
+
+<p>Hence, the correct answer is <strong>"1, 4, 2, 3, 5".</strong></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q26" data-correct="3">
+      <div class="q-header">
+        <div class="q-number">Question 27</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Arrange the given words in the sequence in which they occur in the dictionary.</p>
+
+<p>1. Taken</p>
+
+<p>2. Tactless</p>
+
+<p>3. Tackle</p>
+
+<p>4. Tactful</p>
+
+<p>5. Talent</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(26, 1)"><div class="option-letter">A</div><div class="option-text">24351</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(26, 2)"><div class="option-letter">B</div><div class="option-text">12543</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(26, 3)"><div class="option-letter">C</div><div class="option-text">34215</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(26, 4)"><div class="option-letter">D</div><div class="option-text">54132</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol26"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$49</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q27" data-correct="3">
+      <div class="q-header">
+        <div class="q-number">Question 28</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Arrange the given words in the sequence in which they occur in the dictionary.</p>
+
+<p>1. Engine</p>
+
+<p>2. Emergence</p>
+
+<p>3. Energetic</p>
+
+<p>4. Ectasia</p>
+
+<p>5. Envelope </p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(27, 1)"><div class="option-letter">A</div><div class="option-text">3,2,4,1,5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(27, 2)"><div class="option-letter">B</div><div class="option-text">2,5,1,4,3 </div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(27, 3)"><div class="option-letter">C</div><div class="option-text">4,2,3,1,5</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(27, 4)"><div class="option-letter">D</div><div class="option-text">5,2,3,4,1 </div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol27"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$4b</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q28" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 29</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Arrange the following words in the order in which they would appear in an English dictionary.</p>
+
+<p>1. Candid</p>
+
+<p>2. Cancel</p>
+
+<p>3. Cachet</p>
+
+<p>4. Cable</p>
+5. Canary</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(28, 1)"><div class="option-letter">A</div><div class="option-text">4, 2, 1, 3, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(28, 2)"><div class="option-letter">B</div><div class="option-text">4, 3, 5, 2, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(28, 3)"><div class="option-letter">C</div><div class="option-text">4, 3, 2, 1, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(28, 4)"><div class="option-letter">D</div><div class="option-text">3, 5, 4, 1, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol28"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>Cable comes first in the order.</p>
+
+<p>It is followed by Cachet.</p>
+
+<p>Cachet is followed by Canary.</p>
+
+<p>Canary is followed by Cancel.</p>
+
+<p>Cancel is followed by Candid.</p>
+
+<p>The correct dictionary order is,</p>
+
+<p>Cable (4) → Cachet (3) → Canary (5) → Cancel (2) → Candid (1)</p>
+Hence, option 2 is the correct answer.</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q29" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 30</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Primary</p>
+
+<p>2. Pristine</p>
+
+<p>3. Predator</p>
+
+<p>4. Precaution</p>
+
+<p>5. Preserve</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(29, 1)"><div class="option-letter">A</div><div class="option-text">4, 3, 5, 2, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(29, 2)"><div class="option-letter">B</div><div class="option-text">4, 3, 5, 1, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(29, 3)"><div class="option-letter">C</div><div class="option-text">3, 4, 5, 1, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(29, 4)"><div class="option-letter">D</div><div class="option-text">4, 5, 3, 1, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol29"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$36</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q30" data-correct="3">
+      <div class="q-header">
+        <div class="q-number">Question 31</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Sanitization</p>
+
+<p>2. Sanctuary</p>
+
+<p>3. Salvation</p>
+
+<p>4. Salmon</p>
+
+<p>5. Salesman </p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(30, 1)"><div class="option-letter">A</div><div class="option-text"><span style="">5, 3, 4, 1, 2</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(30, 2)"><div class="option-letter">B</div><div class="option-text"><span style="">4, 5, 3, 2, 1</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(30, 3)"><div class="option-letter">C</div><div class="option-text"><span style="">5, 4, 3, 2, 1</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(30, 4)"><div class="option-letter">D</div><div class="option-text"><span style="">4, 3, 2, 1, 5</span></div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol30"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style="">The option that represents the correct order of the given words as they would appear in an English dictionary is shown below:</p>
+
+<p style=""><span style="">5. <strong>Sale</strong>sman </span></p>
+
+<p style="">4. <strong>Salm</strong>on</p>
+
+<p style="">3. <strong>Salv</strong>ation</p>
+
+<p style="">2. <strong>Sanc</strong>tuary</p>
+
+<p style="">1. <strong>Sani</strong>tization</p>
+
+<p style="">Hence, <span style="font-weight: 700;">'</span><strong><span style="">5, 4, 3, 2, 1</span></strong><span style="font-weight: 700;">' </span>is the correct answer.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q31" data-correct="3">
+      <div class="q-header">
+        <div class="q-number">Question 32</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Goodness</p>
+
+<p>2. Gooseberry</p>
+
+<p>3. Goodbye</p>
+
+<p>4. Goodwill</p>
+
+<p>5. Goodies</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(31, 1)"><div class="option-letter">A</div><div class="option-text">4, 1, 5, 2, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(31, 2)"><div class="option-letter">B</div><div class="option-text">2, 4, 5, 1, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(31, 3)"><div class="option-letter">C</div><div class="option-text">3, 5, 1, 4, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(31, 4)"><div class="option-letter">D</div><div class="option-text">1, 2, 3, 4, 5</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol31"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$5f</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q32" data-correct="1">
+      <div class="q-header">
+        <div class="q-number">Question 33</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Manuscript</p>
+
+<p>2. Minor</p>
+
+<p>3. Melody</p>
+
+<p>4. Malicious</p>
+
+<p>5. Memory</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(32, 1)"><div class="option-letter">A</div><div class="option-text">4, 1, 3, 5, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(32, 2)"><div class="option-letter">B</div><div class="option-text">4, 1, 5, 2, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(32, 3)"><div class="option-letter">C</div><div class="option-text">1, 3, 4, 5, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(32, 4)"><div class="option-letter">D</div><div class="option-text">1, 4, 3, 5, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol32"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style="">The correct order of the given words as they would appear in an English dictionary is:</p>
+
+<p style=""><span style="">4. <strong>Mal</strong>icious</span></p>
+
+<p style="">1. <strong>Man</strong>uscript</p>
+
+<p style=""><span style="">3. <strong>Mel</strong>ody</span></p>
+
+<p style="">5. <strong>Mem</strong>ory</p>
+
+<p>2. <strong>Mi</strong>nor</p>
+
+<p>Hence, ‘<strong><span style="">4, 1, 3, 5, 2</span></strong>’ is the correct answer.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q33" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 34</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Pristine</p>
+
+<p>2. Precious</p>
+
+<p>3. pressure</p>
+
+<p>4. Presume</p>
+
+<p>5. Precaution</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(33, 1)"><div class="option-letter">A</div><div class="option-text">1, 2, 3, 4, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(33, 2)"><div class="option-letter">B</div><div class="option-text">5, 2, 3, 4, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(33, 3)"><div class="option-letter">C</div><div class="option-text">5, 2, 4, 3, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(33, 4)"><div class="option-letter">D</div><div class="option-text">5, 3, 2, 4, 1</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol33"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$2e</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q34" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 35</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Martial</p>
+
+<p>2. Margin</p>
+
+<p>3. Martyr</p>
+
+<p>4. Marking</p>
+
+<p>5. Marvel</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(34, 1)"><div class="option-letter">A</div><div class="option-text">2, 1, 4, 3, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(34, 2)"><div class="option-letter">B</div><div class="option-text">2, 4, 3, 1, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(34, 3)"><div class="option-letter">C</div><div class="option-text">1, 2, 4, 5, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(34, 4)"><div class="option-letter">D</div><div class="option-text">2, 4, 1, 3, 5</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol34"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>Given,</p>
+
+<p>1. Martial</p>
+
+<p>2. Margin</p>
+
+<p>3. Martyr</p>
+
+<p>4. Marking</p>
+
+<p>5. Marvel</p>
+
+<p>The above words in dictionary order,</p>
+
+<p>2. Margin</p>
+
+<p>4. Marking</p>
+
+<p>1. Martial</p>
+
+<p>3. Martyr</p>
+
+<p>5. Marvel</p>
+
+<p>Therefore, the correct order of the given words as they would appear in an English dictionary is 2, 4, 1, 3, 5.</p>
+
+<p><strong>Hence, the correct answer is '2, 4, 1, 3, 5'.</strong></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q35" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 36</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Publicity</p>
+
+<p>2. Precision</p>
+
+<p>3. Puberty</p>
+
+<p>4. Pneumonia</p>
+
+<p>5. Perturb</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(35, 1)"><div class="option-letter">A</div><div class="option-text">5, 4, 2, 1, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(35, 2)"><div class="option-letter">B</div><div class="option-text">5, 4, 2, 3, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(35, 3)"><div class="option-letter">C</div><div class="option-text">5, 2, 4, 1, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(35, 4)"><div class="option-letter">D</div><div class="option-text">5, 3, 2, 4, 1</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol35"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style="">According to the sequence in the dictionary:<o:p></o:p></p>
+
+<p style="">The correct order of the given words is:</p>
+
+<p>5. <strong>P<u>e</u></strong>rturb</p>
+
+<p>4. <strong>P<u>n</u></strong>eumonia</p>
+
+<p>2. <strong>P<u>r</u></strong>ecision</p>
+
+<p>3. <strong>P<u>ube</u></strong>rty</p>
+
+<p>1. <strong>P<u>ubl</u></strong>icity</p>
+
+<p style="">Hence, the correct answer is<span style="font-weight: 700;"> "</span><strong><span style="">5, 4, 2, 3, 1</span></strong><span style="font-weight: 700;">".</span></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q36" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 37</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Ecology</p>
+
+<p>2. Enormous</p>
+
+<p>3. Electric</p>
+
+<p>4. Exterior</p>
+
+<p>5. Ecliptic</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(36, 1)"><div class="option-letter">A</div><div class="option-text">5, 1, 2, 3, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(36, 2)"><div class="option-letter">B</div><div class="option-text">1, 5, 2, 3, 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(36, 3)"><div class="option-letter">C</div><div class="option-text">1, 5, 4, 3, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(36, 4)"><div class="option-letter">D</div><div class="option-text">5, 1, 3, 2, 4</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol36"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p><img alt="" src="img/55076ea54395deab263d9b051c59629eca76721df23f2e015a81f3f08dd2601e.png" style="width: 450px; height: 107px;" /></p>
+
+<p>As per the dictionary, the given words can be arranged as:</p>
+
+<p>5. <strong>Ecl</strong>iptic</p>
+
+<p>1. <strong>Eco</strong>logy</p>
+
+<p>3. <strong>El</strong>ectric</p>
+
+<p>2. <strong>En</strong>ormous</p>
+
+<p>4. <strong>Ex</strong>terior</p>
+
+<p>The correct sequence is 5, 1, 3, 2, 4.</p>
+
+<p>Hence, <strong>"option 4"</strong> is the correct answer.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q37" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 38</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Gravity</p>
+
+<p>2. Glycogen</p>
+
+<p>3. Gestation</p>
+
+<p>4. Glycerine</p>
+
+<p>5. Gesture</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(37, 1)"><div class="option-letter">A</div><div class="option-text">3, 1, 2, 4, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(37, 2)"><div class="option-letter">B</div><div class="option-text">3, 5, 4, 2, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(37, 3)"><div class="option-letter">C</div><div class="option-text">3, 5, 2, 4, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(37, 4)"><div class="option-letter">D</div><div class="option-text">3, 2, 5, 1, 4</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol37"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p><span style="">Arranging all the words as per their order in the dictionary:</span></p>
+
+<p style="">3. <strong>Ge<u>sta</u></strong>tion</p>
+
+<p style="">5. <strong>G<u>estu</u></strong>re</p>
+
+<p style=""><span style="">4. <strong>G<u>lyce</u></strong>rine</span></p>
+
+<p style=""><span style="">2. <strong>G<u>lyco</u></strong>gen</span></p>
+
+<p style=""><span style="">1. <strong>G<u>r</u></strong>avity</span></p>
+
+<p style="">Hence, "<strong>3, 5, 4, 2, 1" </strong>is the correct order.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q38" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 39</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary. </p>
+
+<p>1. Speaking</p>
+
+<p>2. Standardize </p>
+
+<p>3. Southern</p>
+
+<p>4. Stampede</p>
+
+<p>5. Spacious</p>
+
+<p>6. Sovereignty </p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(38, 1)"><div class="option-letter">A</div><div class="option-text">3, 4, 6, 5, 1, 2 </div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(38, 2)"><div class="option-letter">B</div><div class="option-text">3, 6, 5, 1, 4, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(38, 3)"><div class="option-letter">C</div><div class="option-text">3, 6, 2, 4, 1, 5 </div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(38, 4)"><div class="option-letter">D</div><div class="option-text">3, 2, 6, 1, 4, 5 </div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol38"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$3a</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q39" data-correct="1">
+      <div class="q-header">
+        <div class="q-number">Question 40</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the following words as they appear in an English dictionary.</p>
+
+<p>1. Boatyard</p>
+
+<p>2. Boathouse</p>
+
+<p>3. Boater</p>
+
+<p>4. Boatman</p>
+
+<p>5. Boating</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(39, 1)"><div class="option-letter">A</div><div class="option-text">3 - 2 - 5 - 4 - 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(39, 2)"><div class="option-letter">B</div><div class="option-text">3 - 2 - 5 - 1 - 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(39, 3)"><div class="option-letter">C</div><div class="option-text">2 - 5 - 3 - 1 - 4</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(39, 4)"><div class="option-letter">D</div><div class="option-text">2 - 3 - 5 - 4 - 1</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol39"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The correct order as they appear in an English dictionary is:</p>
+
+<p>3. <strong>Boate</strong>r</p>
+
+<p>2. <strong>Boath</strong>ouse</p>
+
+<p>5. <strong>Boati</strong>ng</p>
+
+<p>4. <strong>Boatm</strong>an</p>
+
+<p>1. <strong>Boaty</strong>ard</p>
+
+<p>So, the correct order is <strong>3 - 2 - 5 - 4 - 1</strong>.</p>
+
+<p>Hence, the correct answer is <strong>Option 1</strong>.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q40" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 41</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Sorting</p>
+
+<p>2. Solitary</p>
+
+<p>3. Solution</p>
+
+<p>4. Sophisticate</p>
+
+<p>5. Solvent</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(40, 1)"><div class="option-letter">A</div><div class="option-text">2, 5, 3, 4, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(40, 2)"><div class="option-letter">B</div><div class="option-text">2, 4, 1, 5, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(40, 3)"><div class="option-letter">C</div><div class="option-text">2, 3, 1, 4, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(40, 4)"><div class="option-letter">D</div><div class="option-text">2, 3, 5, 4, 1</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol40"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary is shown below:</p>
+
+<p>2. <strong>Soli</strong>tary</p>
+
+<p>3. <strong>Solu</strong>tion</p>
+
+<p>5. <strong>Solv</strong>ent</p>
+
+<p>4. <strong>Sop</strong>histicate</p>
+
+<p>1. <strong>Sor</strong>ting</p>
+
+<p>Hence, ‘<strong>2, 3, 5, 4, 1</strong>’ is the correct answer.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q41" data-correct="1">
+      <div class="q-header">
+        <div class="q-number">Question 42</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Arrange the given words in the sequence in which they occur in the dictionary.</p>
+
+<p>1. Wage</p>
+
+<p>2. Waist</p>
+
+<p>3. Waste</p>
+
+<p>4. West</p>
+
+<p>5. Wave</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(41, 1)"><div class="option-letter">A</div><div class="option-text">12354</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(41, 2)"><div class="option-letter">B</div><div class="option-text">42135</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(41, 3)"><div class="option-letter">C</div><div class="option-text">35241</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(41, 4)"><div class="option-letter">D</div><div class="option-text">24351</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol41"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style="color: rgb(33, 37, 41);">The correct order according to the English dictionary is:</p>
+
+<p>1. <u><strong>Wag</strong></u>e</p>
+
+<p>2. <u><strong>Wa</strong></u>ist</p>
+
+<p>3. <u><strong>Was</strong></u>te</p>
+
+<p><span style="color: rgb(33, 37, 41);">5. <u><strong>Wav</strong></u>e</span></p>
+
+<p>4. <u><strong>We</strong></u>st</p>
+
+<p style="color: rgb(33, 37, 41);">From the arrangement, the correct order is '<span style="color: rgb(33, 37, 41);">12354'.</span></p>
+
+<p style="color: rgb(33, 37, 41);">Hence, the correct answer is <span style="font-weight: bolder;">"Option 1".</span></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q42" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 43</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1.Absorption</p>
+
+<p>2.Absolutely</p>
+
+<p>3.Abduct</p>
+
+<p>4.Abbreviation</p>
+
+<p>5.Accurate</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(42, 1)"><div class="option-letter">A</div><div class="option-text">3, 4, 2, 1, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(42, 2)"><div class="option-letter">B</div><div class="option-text">4, 3, 2, 1, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(42, 3)"><div class="option-letter">C</div><div class="option-text">1, 2, 3, 4, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(42, 4)"><div class="option-letter">D</div><div class="option-text">3, 2, 4, 1, 5</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol42"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>We will arrange the given words in alphabetical order as shown below:</p>
+
+<p><span style="">4.  <strong>Ab<u>b</u></strong>reviation</span></p>
+
+<p><span style="">3.  <strong>Ab<u>d</u></strong>uct</span></p>
+
+<p style="">2.  <strong>Ab<u>sol</u></strong>utely</p>
+
+<p style=""><span style="">1.  <strong>Abso<u>r</u></strong>ption</span></p>
+
+<p style="">5.  <strong>A<u>c</u></strong>curate</p>
+
+<p style="">Hence, the correct order is<strong> "4, 3, 2, 1, 5".</strong></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q43" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 44</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the option that represents the correct order of the given words as they would appear in an English dictionary.</p>
+
+<p>1. Flexible</p>
+
+<p>2. Flower</p>
+
+<p>3. Flooring</p>
+
+<p>4. Flood</p>
+
+<p>5. Floater</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(43, 1)"><div class="option-letter">A</div><div class="option-text">3, 5, 4, 2, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(43, 2)"><div class="option-letter">B</div><div class="option-text">1, 5, 4, 3, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(43, 3)"><div class="option-letter">C</div><div class="option-text">2, 5, 4, 3, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(43, 4)"><div class="option-letter">D</div><div class="option-text">1, 5, 3, 4, 2</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol43"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>Below given is an order, which represents the correct sequence of words as they would appear in a dictionary:</p>
+
+<p>1. <strong>Fle</strong>xible</p>
+
+<p>5. <strong>Floa</strong>ter</p>
+
+<p>4. <strong>Flood</strong> </p>
+
+<p>3. <strong>Floor</strong>ing</p>
+
+<p>2. <strong>Flow</strong>er</p>
+
+<p>Hence, <strong>1, 5, 4, 3, 2</strong> is correct.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q44" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 45</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Topology</p>
+
+<p>2. Topper</p>
+
+<p>3. Tolerance</p>
+
+<p>4. Together</p>
+
+<p>5. Tomorrow</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(44, 1)"><div class="option-letter">A</div><div class="option-text">4, 5, 3, 1, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(44, 2)"><div class="option-letter">B</div><div class="option-text">4, 3, 5, 1, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(44, 3)"><div class="option-letter">C</div><div class="option-text">4, 2, 3, 1, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(44, 4)"><div class="option-letter">D</div><div class="option-text">4, 2, 1, 5, 3</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol44"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content">$34</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q45" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 46</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Select the correct option that indicates the arrangement of the given words in the order in which they appear in an English dictionary.</p>
+
+<p>1. Success</p>
+
+<p>2. Surreal</p>
+
+<p>3. Succumb</p>
+
+<p>4. Suction</p>
+
+<p>5. Surrogate</p>
+
+<p>6. Surprise</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(45, 1)"><div class="option-letter">A</div><div class="option-text">1, 4, 3, 6, 2, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(45, 2)"><div class="option-letter">B</div><div class="option-text">1, 3, 6, 4, 2, 5</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(45, 3)"><div class="option-letter">C</div><div class="option-text">1, 3, 4, 6, 5, 2</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(45, 4)"><div class="option-letter">D</div><div class="option-text">1, 3, 4, 6, 2, 5</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol45"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>Arranging all the words as per their order in the dictionary:</p>
+
+<p>1. <strong>Succe</strong>ss</p>
+
+<p>3. <strong>Succu</strong>mb</p>
+
+<p>4. <strong>Suct</strong>ion</p>
+
+<p>6. <strong>Surp</strong>rise</p>
+
+<p>2. <strong>Surre</strong>al</p>
+
+<p>5. <strong>Surro</strong>gate</p>
+
+<p>Hence, <strong>1, 3, 4, 6, 2, 5</strong> is the correct order.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q46" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 47</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>After arranging the given words according to dictionary order, which word will come at ‘Third’ position?</p>
+
+<p>1. Oblivion</p>
+
+<p>2. Oblique</p>
+
+<p>3. Oblige</p>
+
+<p>4. Oblate</p>
+
+<p>5. Oblong</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(46, 1)"><div class="option-letter">A</div><div class="option-text">Oblate</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(46, 2)"><div class="option-letter">B</div><div class="option-text">Oblique</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(46, 3)"><div class="option-letter">C</div><div class="option-text">Oblige</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(46, 4)"><div class="option-letter">D</div><div class="option-text">Oblivion</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol46"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style="">According to the sequence in the dictionary:</p>
+
+<p style="">4. <u><strong>Obla</strong></u>te</p>
+
+<p style="">3. <u><strong>Oblig</strong></u>e</p>
+
+<p style="">2. <u><strong>Obliq</strong></u>ue</p>
+
+<p style="">1. <u><strong>Obliv</strong></u>ion</p>
+
+<p style=""><span style="">5. <u><strong>Oblo</strong></u>ng</span></p>
+
+<p style="">Hence, the correct option is <span style="font-weight: 700;">"</span><strong><span style="">Oblique</span></strong><span style="font-weight: 700;">"</span>.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q47" data-correct="2">
+      <div class="q-header">
+        <div class="q-number">Question 48</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Which option represents the correct order of the given words as they would appear in English dictionary?</p>
+
+<p>1. Rumoured</p>
+
+<p>2. Rudiment</p>
+
+<p>3. Rumanian</p>
+
+<p>4. Royalties</p>
+
+<p>5. Rigorous</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(47, 1)"><div class="option-letter">A</div><div class="option-text">5, 4, 2, 1, 3</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(47, 2)"><div class="option-letter">B</div><div class="option-text">5, 4, 2, 3, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(47, 3)"><div class="option-letter">C</div><div class="option-text">4, 5, 2, 3, 1</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(47, 4)"><div class="option-letter">D</div><div class="option-text">4, 5, 2, 1, 3</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol47"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The logic followed here is :-</p>
+
+<p><span style="">5. <strong>R<u>i</u></strong>gorous</span></p>
+
+<p><span style="">4. <strong>R<u>o</u></strong>yalties</span></p>
+
+<p><span style="">2. <strong>R<u>ud</u></strong>iment</span></p>
+
+<p><span style="">3. <strong>R<u>uma</u></strong>nian</span></p>
+
+<p><span style="">1. <strong>R<u>umo</u></strong>ured</span></p>
+
+<p><span style="">Thus, the correct answer is <strong>"5, 4, 2, 3, 1".</strong></span></p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q48" data-correct="4">
+      <div class="q-header">
+        <div class="q-number">Question 49</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>Arrange the given words in the sequence in which they occur in the dictionary.</p>
+
+<p>1. Gain</p>
+
+<p>2. Gaiter</p>
+
+<p>3. Gainsay</p>
+
+<p>4. Gaiety</p>
+
+<p>5. Gauge</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(48, 1)"><div class="option-letter">A</div><div class="option-text">4,1,2,3,5</div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(48, 2)"><div class="option-letter">B</div><div class="option-text">4,1,5,3,2</div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(48, 3)"><div class="option-letter">C</div><div class="option-text">4,1,5,2,3</div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(48, 4)"><div class="option-letter">D</div><div class="option-text">4,1,3,2,5</div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol48"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p>The correct order as per the dictionary is:</p>
+
+<p>4) <strong>Gaie</strong>ty</p>
+
+<p>1) <strong>Gain</strong></p>
+
+<p>3) <strong>Gains</strong>ay</p>
+
+<p>2) <strong>Gait</strong>er</p>
+
+<p>5) <strong>Gau</strong>ge</p>
+
+<p>Hence, the correct answer is <strong>"4, 1, 3, 2, 5"</strong>.</p>
+</div></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="q49" data-correct="1">
+      <div class="q-header">
+        <div class="q-number">Question 50</div>
+        <div class="q-marks"><span class="pos">+2</span> <span class="neg">−0.5</span></div>
+      </div>
+      <div class="q-body">
+        <div class="q-text"><p>After arranging the given words according to dictionary order, which word will come at ‘Third’ position?</p>
+
+<p>1. Overwork</p>
+
+<p>2. Overwrought</p>
+
+<p>3. Overwhelming</p>
+
+<p>4. Overweight</p>
+
+<p>5. Overweening</p>
+</div>
+        <div class="options">
+          <div class="option" data-option="1" onclick="selectOption(49, 1)"><div class="option-letter">A</div><div class="option-text"><span style="">Overwhelming</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="2" onclick="selectOption(49, 2)"><div class="option-letter">B</div><div class="option-text"><span style="">Overwrought</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="3" onclick="selectOption(49, 3)"><div class="option-letter">C</div><div class="option-text"><span style="">Overweight</span></div><div class="option-check"></div></div>
+          <div class="option" data-option="4" onclick="selectOption(49, 4)"><div class="option-letter">D</div><div class="option-text"><span style="">Overweening</span></div><div class="option-check"></div></div>
+        </div>
+        <div class="solution" id="sol49"><div class="solution-header"><div class="solution-icon">💡</div><div class="solution-title">Solution</div></div><div class="solution-content"><p style="">According to the sequence in the dictionary:</p>
+
+<p style=""><span style="">5. <u><strong>Overwee</strong></u>ning</span></p>
+
+<p style="">4. <u><strong>Overwei</strong></u>ght</p>
+
+<p style="">3. <u><strong>Overwhel</strong></u>ming</p>
+
+<p style="">1. <u><strong>Overwo</strong></u>rk</p>
+
+<p style="">2. <u><strong>Overwr</strong></u>ought</p>
+
+<p style="">Hence, the correct option is <strong><span style="font-weight: 700;">"</span><span style="">Overwhelming</span></strong><span style="font-weight: 700;">"</span>.</p>
+</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Question palette -->
+<div class="palette">
+  <div class="palette-title">Question Palette</div>
+  <div class="palette-grid" id="palette"></div>
+</div>
+
+<script>
+const totalQuestions = 50;
+const userAnswers = {};
+let submitted = false;
+let timeLeft = 3600;
+
+// Build palette
+const palette = document.getElementById('palette');
+for (let i = 0; i < totalQuestions; i++) {
+  const item = document.createElement('div');
+  item.className = 'palette-item';
+  item.id = 'palette-' + i;
+  item.textContent = i + 1;
+  item.onclick = () => document.getElementById('q' + i).scrollIntoView({behavior:'smooth'});
+  palette.appendChild(item);
+}
+
+// Timer
+const timerEl = document.getElementById('timer');
+const timerInterval = setInterval(() => {
+  if (submitted) { clearInterval(timerInterval); return; }
+  timeLeft--;
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  timerEl.textContent = `⏱ ${m}:${s.toString().padStart(2,'0')}`;
+  if (timeLeft <= 0) { clearInterval(timerInterval); submitTest(); }
+}, 1000);
+
+// Option selection
+function selectOption(qIdx, optIdx) {
+  if (submitted) return;
+  // Remove previous selection
+  const q = document.getElementById('q' + qIdx);
+  q.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  // Add new selection
+  const opt = q.querySelector(`.option[data-option="${optIdx}"]`);
+  if (opt) opt.classList.add('selected');
+  userAnswers[qIdx] = optIdx;
+  // Update palette
+  document.getElementById('palette-' + qIdx).classList.add('answered');
+}
+
+// Submit test
+function submitTest() {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+  
+  let score = 0;
+  let correctCount = 0;
+  let attempted = 0;
+  
+  for (let i = 0; i < totalQuestions; i++) {
+    const q = document.getElementById('q' + i);
+    const correct = parseInt(q.dataset.correct);
+    const userAns = userAnswers[i];
+    
+    q.querySelectorAll('.option').forEach((opt, idx) => {
+      const optNum = parseInt(opt.dataset.option);
+      opt.onclick = null;
+      if (optNum === correct) {
+        opt.classList.add('correct');
+        opt.querySelector('.option-check').textContent = '✓';
+      } else if (optNum === userAns) {
+        opt.classList.add('wrong');
+        opt.querySelector('.option-check').textContent = '✗';
+      }
+    });
+    
+    if (userAns) {
+      attempted++;
+      if (userAns === correct) {
+        score += 2;
+        correctCount++;
+      } else {
+        score -= 0.5;
+      }
+    }
+  }
+  
+  // Show score
+  const banner = document.getElementById('scoreBanner');
+  document.getElementById('scoreValue').textContent = `${correctCount}/${totalQuestions}`;
+  document.getElementById('scoreLabel').textContent = `Score: ${score} | Attempted: ${attempted} | Correct: ${correctCount} | Wrong: ${attempted - correctCount}`;
+  banner.classList.add('visible');
+  banner.scrollIntoView({behavior:'smooth'});
+  
+  // Show analysis
+  if (typeof analysisData !== 'undefined' && analysisData) {
+    const card = document.getElementById('analysisCard');
+    const grid = document.getElementById('analysisGrid');
+    grid.innerHTML = `
+      <div class="stat"><div class="value rank">${analysisData.rank || 'N/A'}</div><div class="label">Rank</div></div>
+      <div class="stat"><div class="value pct">${analysisData.percentile ? analysisData.percentile.toFixed(2) + '%' : 'N/A'}</div><div class="label">Percentile</div></div>
+      <div class="stat"><div class="value avg">${analysisData.avgMarks ? analysisData.avgMarks.toFixed(2) : 'N/A'}</div><div class="label">Avg Marks</div></div>
+      <div class="stat"><div class="value total">${analysisData.totalStudents || 'N/A'}</div><div class="label">Students</div></div>
+    `;
+    card.classList.add('visible');
+  }
+  
+  // Show solutions + hide submit
+  document.getElementById('submitBtn').style.display = 'none';
+  const solBtn = document.getElementById('viewSolutionsBtn');
+  solBtn.style.display = 'inline-block';
+  
+  // Show all solutions
+  document.querySelectorAll('.solution').forEach(s => s.classList.add('visible'));
+  
+  // Re-typeset math
+  if (window.MathJax && window.MathJax.typesetPromise) {
+    window.MathJax.typesetPromise();
+  }
+}
+
+// Toggle solutions
+let solutionsVisible = true;
+function toggleSolutions() {
+  solutionsVisible = !solutionsVisible;
+  document.querySelectorAll('.solution').forEach(s => {
+    if (solutionsVisible) s.classList.add('visible');
+    else s.classList.remove('visible');
+  });
+  document.getElementById('viewSolutionsBtn').textContent = solutionsVisible ? '📖 Hide Solutions' : '📖 Show Solutions';
+}
+
+// Show submit button after first answer
+document.addEventListener('click', () => {
+  document.getElementById('submitBtn').classList.add('visible');
+}, { once: true });
+</script>
+</body>
+</html>
